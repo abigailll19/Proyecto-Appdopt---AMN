@@ -47,8 +47,40 @@ fun AppNavigation(
             Box(modifier = Modifier.fillMaxSize()) {
                 NavHost(
                     navController = navController,
-                    startDestination = "home"
+                    startDestination = "login"
                 ) {
+                    composable("login") {
+                        LoginScreen(
+                            onLoginSuccess = { isAdmin ->
+                                if (isAdmin) {
+                                    navController.navigate("admin_dashboard") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                } else {
+                                    navController.navigate("home") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                }
+                            },
+                            onRegisterClick = { /* Navegar a registro if exists */ }
+                        )
+                    }
+                    composable("admin_dashboard") {
+                        AdminDashboardScreen(
+                            onNavigateToAddPet = { navController.navigate("add_pet") },
+                            onNavigateToEditShelter = { navController.navigate("edit_shelter") }
+                        )
+                    }
+                    composable("add_pet") {
+                        AddPetScreen(
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
+                    composable("edit_shelter") {
+                        EditShelterScreen(
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
                     composable("home") {
                         HomeScreen(
                             viewModel = viewModel,
